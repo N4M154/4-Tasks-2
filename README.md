@@ -3,7 +3,7 @@
 A Least Recently Used (LRU) cache implemented from scratch — no
 `collections.OrderedDict`, no third-party libraries. Supports:
 
-- `LRUCache(capacity)`
+- `Cache(capacity)`
 - `get(key)` → value, or `-1` if not present
 - `put(key, value)` → insert or update
 
@@ -19,11 +19,10 @@ The cache combines **two** structures so both operations stay O(1):
    its `prev` and `next`, you can cut a node out of the middle of the
    list and drop it back in at the front in O(1), with no shifting of
    other elements the way an array/Python list would require.
-
-Two permanent **sentinel nodes** (`_front`, `_back`) bookend the real
-entries. They hold no data — they just guarantee every real node has
-a neighbor on both sides, so insert/remove code never needs to
-special-case an empty or single-item list.
+   Two permanent **sentinel nodes** (`_front`, `_back`) bookend the real
+   entries. They hold no data — they just guarantee every real node has
+   a neighbor on both sides, so insert/remove code never needs to
+   special-case an empty or single-item list.
 
 ### Why not `OrderedDict`?
 
@@ -45,6 +44,12 @@ linked list by hand is what actually shows the underlying design.
     — it's detached and removed from the dict in O(1) (no search
     needed, we always know exactly where it is).
   - The new node is inserted at the front and added to the dict.
+    **Note on naming:** the class is called `Cache` (matching the
+    assignment's example, `cache = Cache(2)`), but the eviction behavior
+    is fully LRU — recency-tracked via the linked list, not just
+    insertion order. `test_cache.py::test_eviction_on_overflow` and the
+    manual check below both confirm a key that's touched via `get()`
+    survives longer than one that isn't, even if it was inserted first.
 
 ## Complexity
 
@@ -61,21 +66,11 @@ per cached item, capped at `capacity`.
 Requires Python 3.7+, no dependencies.
 
 ```bash
-# Run the example/demo (prints live output, matches the assignment example)
 python demo.py
 
 # Run the unit test suite
 python -m unittest -v
 ```
-
-### Files
-
-- `lru_cache.py` — the `LRUCache` implementation
-- `demo.py` — runs the assignment's example scenario + a couple of
-  edge cases, printing real output
-- `test_lru_cache.py` — unit tests (7 cases: basic ops, eviction,
-  missing keys, update-refreshes-recency, capacity=1, invalid
-  capacity, `len`/`in`)
 
 ### Claude AI tool
 

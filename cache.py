@@ -1,7 +1,8 @@
 """
-lru_cache.py
-------------
-A from-scratch Least Recently Used (LRU) Cache.
+cache.py
+--------
+A from-scratch Least Recently Used (LRU) Cache, exposed as `Cache`
+per the assignment spec.
 
 DESIGN
 ======
@@ -53,7 +54,7 @@ class _Node:
         self.next = None
 
 
-class LRUCache:
+class Cache:
     def __init__(self, capacity: int):
         if not isinstance(capacity, int) or capacity <= 0:
             raise ValueError("capacity must be a positive integer")
@@ -122,4 +123,4 @@ class LRUCache:
         while node is not self._back:
             items.append(f"{node.key!r}: {node.value!r}")
             node = node.next
-        return "LRUCache([" + ", ".join(items) + "])  # MRU -> LRU"
+        return "Cache([" + ", ".join(items) + "])  # MRU -> LRU"

@@ -1,23 +1,23 @@
 """
 test_lru_cache.py
 ------------------
-Unit tests for LRUCache. Run with:  python3 -m unittest -v
+Unit tests for Cache. Run with:  python3 -m unittest -v
 """
 
 import unittest
-from lru_cache import LRUCache
+from cache import Cache
 
 
-class TestLRUCache(unittest.TestCase):
+class TestCache(unittest.TestCase):
 
     def test_basic_get_put(self):
-        c = LRUCache(2)
+        c = Cache(2)
         c.put("A", 10)
         c.put("B", 20)
         self.assertEqual(c.get("A"), 10)
 
     def test_eviction_on_overflow(self):
-        c = LRUCache(2)
+        c = Cache(2)
         c.put("A", 10)
         c.put("B", 20)
         c.get("A")          # A becomes most recently used
@@ -27,11 +27,11 @@ class TestLRUCache(unittest.TestCase):
         self.assertEqual(c.get("A"), 10)
 
     def test_missing_key_returns_negative_one(self):
-        c = LRUCache(3)
+        c = Cache(3)
         self.assertEqual(c.get("nope"), -1)
 
     def test_update_existing_key_refreshes_recency(self):
-        c = LRUCache(2)
+        c = Cache(2)
         c.put("A", 1)
         c.put("B", 2)
         c.put("A", 100)      # update -> A is now most recently used
@@ -41,7 +41,7 @@ class TestLRUCache(unittest.TestCase):
         self.assertEqual(c.get("C"), 3)
 
     def test_capacity_one(self):
-        c = LRUCache(1)
+        c = Cache(1)
         c.put("X", 1)
         c.put("Y", 2)         # immediately evicts X
         self.assertEqual(c.get("X"), -1)
@@ -49,12 +49,12 @@ class TestLRUCache(unittest.TestCase):
 
     def test_invalid_capacity_raises(self):
         with self.assertRaises(ValueError):
-            LRUCache(0)
+            Cache(0)
         with self.assertRaises(ValueError):
-            LRUCache(-5)
+            Cache(-5)
 
     def test_len_and_contains(self):
-        c = LRUCache(2)
+        c = Cache(2)
         c.put("A", 1)
         self.assertIn("A", c)
         self.assertEqual(len(c), 1)
